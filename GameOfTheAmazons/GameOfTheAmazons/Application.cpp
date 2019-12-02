@@ -1,0 +1,14 @@
+//////////////////////////////////////////////////////////////
+/**
+@file Application.cpp
+@author Romil Tendulkar
+@date 12/02/2019
+@brief This file is basically the main for the project and 
+the project will run through this
+*/
+//////////////////////////////////////////////////////////////
+
+int main()
+{
+
+}
