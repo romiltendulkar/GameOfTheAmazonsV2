@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <vector>
+
 class MoveClass;
 //////////////////////////////////////////////////////////////
 // Enum
@@ -68,9 +70,13 @@ public:
 		\param pMove | The pointer to the move that will be made on the board.
 	*/
 	void ValidateMove(MoveClass* pMove);
+
+	void PrintBoard();
+
 	//////////////////////////////////////////////////////////////
 	// Variables
 	//////////////////////////////////////////////////////////////
 public:
-	unsigned int mNumRows, mNumCols;		// Number of Rows and Columns on the Board
+	unsigned int mNumRows, mNumCols;			// Number of Rows and Columns on the Board
+	std::vector<std::vector<int>>* mBoardVec;	// The vector that holds the data for the Board 
 };

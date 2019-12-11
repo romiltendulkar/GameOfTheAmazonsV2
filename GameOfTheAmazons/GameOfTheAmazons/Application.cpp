@@ -41,4 +41,11 @@ int main()
 		//Error handling for output file
 		std::cout << "\nFailed to create an output file ";
 	}
+
+	Solver* mySolver = new Solver(inFile, outFile);
+	mySolver->MakeBoard();
+
+	//close both  the files
+	fclose(inFile);
+	fclose(outFile);
 }

@@ -21,9 +21,16 @@ class Solver
 public:
 	Solver(FILE* pInFile, FILE* pOutFile);
 	~Solver();
+	void MakeBoard();
+	void Solve();
 
+
+public:
+	Board* mCurrentBestAI;			//Storing the Board after the AI makes its best move.
+	Board* mCurrentBestPlayer;		//Storing the Board after the player makes his best move.
+	Board* mCurrentBoard;			//Current Board just incase.
 private:
-	FILE* mInFile;
-	FILE* mOutFile;
+	FILE* mInFile;					//Pointer to the file containing the starting board.
+	FILE* mOutFile;					//Pointer to the output file incase we wanna print our moves.
 };
 
