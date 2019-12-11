@@ -24,11 +24,16 @@ public:
 	void MakeBoard();
 	void Solve();
 
+	void Search(Board* pBoard,int depthTo, int currDepth);
+	void GetBestMove(Board* pBoard, int currPlayer);
 
 public:
 	Board* mCurrentBestAI;			//Storing the Board after the AI makes its best move.
 	Board* mCurrentBestPlayer;		//Storing the Board after the player makes his best move.
 	Board* mCurrentBoard;			//Current Board just incase.
+	
+	MoveClass* mBestAI;				//Best Move AI can make on the current Board.
+	MoveClass* mBestPlayer;			//Best Move Player can make in response to the AI.
 private:
 	FILE* mInFile;					//Pointer to the file containing the starting board.
 	FILE* mOutFile;					//Pointer to the output file incase we wanna print our moves.

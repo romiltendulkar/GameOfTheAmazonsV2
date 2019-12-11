@@ -69,7 +69,6 @@ public:
 
 		\param pMove | The pointer to the move that will be made on the board.
 	*/
-	void ValidateMove(MoveClass* pMove);
 
 	void PrintBoard();
 

@@ -17,7 +17,7 @@ class MoveClass
 	// Functions
 	//////////////////////////////////////////////////////////////
 public:
-	MoveClass();
+	MoveClass(int OrigX, int OrigY, int NewX, int NewY, int ShootX, int ShootY, BoardIDs player);
 	~MoveClass();
 
 	/**
@@ -27,7 +27,6 @@ public:
 		\param pBoard | The pointer to the board on which the move is made.
 		\return The scope of the board is returned
 	*/
-	int FindScope(Board* pBoard);
 
 	//////////////////////////////////////////////////////////////
 	// Variables

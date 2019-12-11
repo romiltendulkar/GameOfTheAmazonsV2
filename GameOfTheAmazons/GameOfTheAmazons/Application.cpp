@@ -42,8 +42,11 @@ int main()
 		std::cout << "\nFailed to create an output file ";
 	}
 
+	//Create the solver object and the board from the file.
 	Solver* mySolver = new Solver(inFile, outFile);
 	mySolver->MakeBoard();
+
+	//mySolver->Solve();
 
 	//close both  the files
 	fclose(inFile);

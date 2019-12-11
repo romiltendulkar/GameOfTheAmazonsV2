@@ -8,12 +8,21 @@
 	and writing to another file
 */
 //////////////////////////////////////////////////////////////
+#include <algorithm>
+
 
 #include "Solver.h"
 Solver::Solver(FILE* pInFile, FILE* pOutFile)
 {
 	mInFile = pInFile;
 	mOutFile = pOutFile;
+	
+	mCurrentBoard = nullptr;
+	mCurrentBestAI = nullptr;
+	mCurrentBestPlayer = nullptr;
+
+	mBestAI = nullptr;
+	mBestPlayer = nullptr;
 }
 
 Solver::~Solver()
@@ -40,10 +49,25 @@ void Solver::MakeBoard()
 		}
 	}
 
-	mCurrentBoard->PrintBoard();
+	//mCurrentBoard->PrintBoard();
 }
 
 void Solver::Solve()
+{
+
+}
+
+void Solver::Search(Board *pBoard, int depthTo, int currDepth)
+{
+	bool isMax = false;
+
+	if (currDepth % 2)
+	{
+		isMax = true;
+	}
+}
+
+void Solver::GetBestMove(Board* pBoard, int currPlayer)
 {
 
 }

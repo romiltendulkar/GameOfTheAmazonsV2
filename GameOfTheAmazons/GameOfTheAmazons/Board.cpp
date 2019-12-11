@@ -48,11 +48,6 @@ Board::~Board()
 	mBoardVec->clear();
 }
 
-void Board::ValidateMove(MoveClass* pMove)
-{
-
-}
-
 void Board::UpdateBoard(MoveClass* pMove)
 {
 
