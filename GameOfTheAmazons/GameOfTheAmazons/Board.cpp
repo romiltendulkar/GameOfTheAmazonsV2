@@ -82,3 +82,210 @@ void Board::PrintBoard()
 		}
 	}
 }
+
+int Board::FindScope(BoardIDs player)
+{
+	int ScopeCounter = 0;
+	for (int counter1 = 0; counter1 < mNumRows; ++counter1)
+	{
+		for (int counter2 = 0; counter2 < mNumCols; ++counter2)
+		{
+			if (mBoardVec->at(counter1).at(counter2) == player)
+			{
+				//Calculate Scope
+				int newX, newY;
+				bool hitWall;
+
+				//Check in the upwards direction
+				newX = counter1;
+				newY = counter2 - 1;
+				hitWall = false;
+				while (newY >= 0 && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if(mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+
+						//calculate shooting in right
+						
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newY--;
+				}
+
+				//Check in the Downwards direction
+				newX = counter1;
+				newY = counter2 + 1;
+				hitWall = false;
+				while (newY < mNumRows && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newY++;
+				}
+
+				//Check in Right Direction
+				newX = counter1 + 1;
+				newY = counter2;
+				hitWall = false;
+				while (newX < mNumCols && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX++;
+				}
+
+				//Check in the Left Direction
+				newX = counter1 - 1;
+				newY = counter2;
+				hitWall = false;
+				while (newX >= 0 && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX--;
+				}
+
+				//Check in the -- Direction
+				newX = counter1 - 1;
+				newY = counter2 - 1;
+				hitWall = false;
+				while (newX >= 0 && newY>=0 && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX--;
+					newY--;
+				}
+
+				//Check in the ++ Direction
+				newX = counter1 + 1;
+				newY = counter2 + 1;
+				hitWall = false;
+				while (newX < mNumCols && newY < mNumRows && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX++;
+					newY++;
+				}
+
+				//Check in the -+ Direction
+				newX = counter1 - 1;
+				newY = counter2 + 1;
+				hitWall = false;
+				while (newX >= 0 && newY < mNumRows && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX--;
+					newY++;
+				}
+
+				//Check in the +- Direction
+				newX = counter1 + 1;
+				newY = counter2 - 1;
+				hitWall = false;
+				while (newX < mNumCols && newY >= 0 && !hitWall)
+				{
+					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
+					{
+						ScopeCounter++;
+					}
+					else
+					{
+						hitWall = true;
+					}
+					newX++;
+					newY--;
+				}
+			}
+		}
+	}
+	return ScopeCounter;
+}

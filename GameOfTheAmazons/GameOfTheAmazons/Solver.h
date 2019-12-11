@@ -24,8 +24,8 @@ public:
 	void MakeBoard();
 	void Solve();
 
-	void Search(Board* pBoard,int depthTo, int currDepth);
-	void GetBestMove(Board* pBoard, int currPlayer);
+	int Search(Board pBoard,int depthTo, int currDepth);
+	int GetBestMove(Board pBoard, int currPlayer);
 
 public:
 	Board* mCurrentBestAI;			//Storing the Board after the AI makes its best move.

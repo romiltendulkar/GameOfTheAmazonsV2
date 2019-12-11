@@ -50,14 +50,15 @@ void Solver::MakeBoard()
 	}
 
 	//mCurrentBoard->PrintBoard();
+	std::cout<<"\nThe scope is: "<<mCurrentBoard->FindScope(BOARD_BLACK);
 }
 
 void Solver::Solve()
 {
-
+	Search(mCurrentBoard, 6, 0);
 }
 
-void Solver::Search(Board *pBoard, int depthTo, int currDepth)
+int Solver::Search(Board pBoard, int depthTo, int currDepth)
 {
 	bool isMax = false;
 
@@ -65,9 +66,18 @@ void Solver::Search(Board *pBoard, int depthTo, int currDepth)
 	{
 		isMax = true;
 	}
+	if (isMax)
+	{
+		GetBestMove(pBoard, BOARD_BLACK);
+	}
+	else
+	{
+		GetBestMove(pBoard, BOARD_WHITE);
+	}
+	return 0;
 }
 
-void Solver::GetBestMove(Board* pBoard, int currPlayer)
+int Solver::GetBestMove(Board pBoard, int currPlayer)
 {
-
+	return 0;
 }
