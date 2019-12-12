@@ -56,7 +56,7 @@ void Solver::MakeBoard()
 void Solver::Solve()
 {
 
-	Search(mCurrentBoard, 0, 0);
+	Search(mCurrentBoard, 5, 0);
 	if(mBestAI != nullptr)
 	{
 		std::cout << "\n Best Move for AI has Scope: " << mBestAI->Scope;
@@ -129,10 +129,13 @@ int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 		{
 			mBestAI = new MoveClass(mMove);
 		}
+		std::cout << "\n Scope is: " << mMove->Scope;
+		return mMove->Scope;
 	}
 	else
 	{
 		mMove = GetBestMove(pBoard, BOARD_WHITE, depthTo, currDepth);
+		return mMove->Scope;
 		//GetBestMove(pBoard, BOARD_WHITE);
 	}
 	return 0;
