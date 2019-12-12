@@ -46,7 +46,7 @@ int main()
 	Solver* mySolver = new Solver(inFile, outFile);
 	mySolver->MakeBoard();
 
-	//mySolver->Solve();
+	mySolver->Solve();
 
 	//close both  the files
 	fclose(inFile);

@@ -24,6 +24,20 @@ MoveClass::MoveClass(int OrigX, int OrigY, int NewX, int NewY, int ShootX, int S
 	mPlayerId = player;
 }
 
+MoveClass::MoveClass(MoveClass* pMove)
+{
+	mOrigX = pMove->mOrigX;
+	mOrigY = pMove->mOrigY;
+
+	mNewX = pMove->mNewX;
+	mNewY = pMove->mNewY;
+
+	mShootX = pMove->mShootX;
+	mShootY = pMove->mShootY;
+
+	mPlayerId = pMove->mPlayerId;
+}
+
 MoveClass::~MoveClass()
 {
 

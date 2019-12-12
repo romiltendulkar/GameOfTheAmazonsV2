@@ -34,7 +34,8 @@ Board::Board(Board* pBoard)
 	{
 		for (int j = 0; j < mNumCols; ++j)
 		{
-			mBoardVec->at(i).at(j) = pBoard->mBoardVec->at(i).at(j);
+			int temp = pBoard->mBoardVec->at(i).at(j);
+			mBoardVec->at(i).at(j) = temp;
 		}
 	}
 }
@@ -50,7 +51,9 @@ Board::~Board()
 
 void Board::UpdateBoard(MoveClass* pMove)
 {
-
+	mBoardVec->at(pMove->mOrigX).at(pMove->mOrigY) = BOARD_CLEAR;
+	mBoardVec->at(pMove->mNewX).at(pMove->mNewY) = pMove->mPlayerId;
+	mBoardVec->at(pMove->mShootX).at(pMove->mShootY) = BOARD_WALL;
 }
 
 void Board::PrintBoard()

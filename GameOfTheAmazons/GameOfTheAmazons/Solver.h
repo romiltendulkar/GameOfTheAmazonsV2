@@ -24,13 +24,13 @@ public:
 	void MakeBoard();
 	void Solve();
 
-	int Search(Board pBoard,int depthTo, int currDepth);
-	int GetBestMove(Board pBoard, int currPlayer);
+	int Search(Board *pBoard,int depthTo, int currDepth);
+	MoveClass* GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, int currDepth);
 
 public:
-	Board* mCurrentBestAI;			//Storing the Board after the AI makes its best move.
-	Board* mCurrentBestPlayer;		//Storing the Board after the player makes his best move.
-	Board* mCurrentBoard;			//Current Board just incase.
+	bool isSatisfied;
+	
+	Board* mCurrentBoard;			//Current Board.
 	
 	MoveClass* mBestAI;				//Best Move AI can make on the current Board.
 	MoveClass* mBestPlayer;			//Best Move Player can make in response to the AI.

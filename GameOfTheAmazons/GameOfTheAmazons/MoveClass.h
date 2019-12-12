@@ -20,13 +20,7 @@ public:
 	MoveClass(int OrigX, int OrigY, int NewX, int NewY, int ShootX, int ShootY, BoardIDs player);
 	~MoveClass();
 
-	/**
-		This function will run a scope finding heuristic to get the scope
-		for the current board.
-
-		\param pBoard | The pointer to the board on which the move is made.
-		\return The scope of the board is returned
-	*/
+	MoveClass(MoveClass* pMove);
 
 	//////////////////////////////////////////////////////////////
 	// Variables
@@ -38,4 +32,6 @@ public:
 	int mNewX, mNewY;			//The points on the board that the moving piece is after the move
 	int mShootX, mShootY;		//The points on the board that the moving piece will shoot at
 	BoardIDs mPlayerId;			//The ID of the player making the move
+
+	int Scope = 0;
 };
