@@ -151,9 +151,135 @@ int Board::FindScope(BoardIDs player)
 						}
 
 						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
 
 						//calculate shooting in right
-						
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
+
 					}
 					else
 					{
@@ -170,7 +296,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -187,7 +487,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -204,7 +678,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -221,7 +869,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -239,7 +1061,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -257,7 +1253,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
@@ -275,7 +1445,181 @@ int Board::FindScope(BoardIDs player)
 				{
 					if (mBoardVec->at(newX).at(newY) == BOARD_CLEAR)
 					{
-						ScopeCounter++;
+						//Calculate shooting scope
+						int shootX, shootY;
+						bool shitWall;
+
+						//check in the upwards direction
+						shootX = newX;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY--;
+						}
+
+						//calculate shooting in downwards
+						shootX = newX;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootY++;
+						}
+
+						//calculate shooting in left
+						shootX = newX - 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+						}
+
+						//calculate shooting in right
+						shootX = newX + 1;
+						shootY = newY;
+						shitWall = false;
+						while (shootX < mNumCols && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+						}
+
+						//calculate shooting in the -- direction
+						shootX = newX - 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY--;
+						}
+
+						//calculate shooting in the -+ direction
+						shootX = newX - 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX >= 0 && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX--;
+							shootY++;
+						}
+
+						//calculate shooting in the ++ direction
+						shootX = newX + 1;
+						shootY = newY + 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY < mNumRows && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY++;
+						}
+
+						//calculate shooting in the +- direction
+						shootX = newX + 1;
+						shootY = newY - 1;
+						shitWall = false;
+						while (shootX < mNumCols && shootY >= 0 && !shitWall)
+						{
+							if (mBoardVec->at(shootX).at(shootY) == BOARD_CLEAR)
+							{
+								ScopeCounter++;
+							}
+							else if (mBoardVec->at(shootX).at(shootY) == player && shootX == counter1 && shootY == counter2)
+							{
+								ScopeCounter++;
+							}
+							else
+							{
+								shitWall = true;
+							}
+							shootX++;
+							shootY--;
+						}
 					}
 					else
 					{
