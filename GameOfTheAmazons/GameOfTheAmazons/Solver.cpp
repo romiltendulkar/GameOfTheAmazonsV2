@@ -55,15 +55,217 @@ void Solver::MakeBoard()
 
 void Solver::Solve()
 {
-
-	Search(mCurrentBoard, 5, 0);
-	if(mBestAI != nullptr)
+	while (!isSatisfied)
 	{
-		std::cout << "\n Best Move for AI has Scope: " << mBestAI->Scope;
+		mCurrentBoard->PrintBoard();
+		Search(mCurrentBoard, 0, 0);
+		if (mBestAI != nullptr)
+		{
+			std::cout << "\n Best Move for AI has Scope: " << mBestAI->Scope;
+			std::cout << "\n The best move for player is from (" << mBestAI->mOrigX << "," << mBestAI->mOrigY
+				<< ") to (" << mBestAI->mNewX << " ," << mBestAI->mNewY
+				<< ") shooting at " << " (" << mBestAI->mShootX << " ," << mBestAI->mShootY << ")";
+		}
+		if (mBestPlayer != nullptr)
+		{
+			std::cout << "\n Best Move for Player has Scope: " << mBestPlayer->Scope;
+			std::cout << "\n The best move for player is from (" << mBestPlayer->mOrigX << "," << mBestPlayer->mOrigY
+				<< ") to (" << mBestPlayer->mNewX << " ," << mBestPlayer->mNewY
+				<< ") shooting at " << " (" << mBestPlayer->mShootX << " ," << mBestPlayer->mShootY << ")";
+		}
+		char input;
+		std::cout << "\n Do you want to make a move? Press Y to confirm: ";
+		std::cin >> input;
+		if (input == 'y' || input == 'Y')
+		{
+			char insideInput;
+			std::cout << "\n Do you want to make best move for player? Press Y to confirm: ";
+			std::cin >> insideInput;
+			if (insideInput == 'y' || insideInput == 'Y')
+			{
+				mCurrentBoard->UpdateBoard(mBestAI);
+				mCurrentBoard->UpdateBoard(mBestPlayer);
+			}
+			else
+			{
+
+				mCurrentBoard->UpdateBoard(mBestAI);
+				mCurrentBoard->PrintBoard();
+				bool moveable = false;
+				int oX, oY, nX, nY, sX, sY;
+
+				while (!moveable)
+				{
+					std::cout << "\Enter x position of piece to move:";
+					std::cin >> oX;
+					std::cout << "\Enter y position of piece to move:";
+					std::cin >> oY;
+					if (mCurrentBoard->mBoardVec->at(oX).at(oY) == BOARD_WHITE)
+					{
+						moveable = true;
+					}
+					else
+					{
+						std::cout << "\n Enter valid position!";
+					}
+				}
+				moveable = false;
+				while (!moveable)
+				{
+					std::cout << "\Enter new x position :";
+					std::cin >> nX;
+					std::cout << "\Enter new y position :";
+					std::cin >> nY;
+					bool hitwall = false;
+					int cx = oX, cy = oY;
+					if (nX == oX && nY == oY)
+					{
+						std::cout << "\n Enter valid position!";
+					}
+					else
+					{
+						while (!hitwall)
+						{
+							if (nX >= oX)
+							{
+								if (cx < nX)
+								{
+									cx++;
+								}
+							}
+							else
+							{
+
+								if (cx > nX)
+								{
+									cx--;
+								}
+							}
+							if (nY >= oY)
+							{
+								if (cy< nY)
+								{
+									cy++;
+								}
+							}
+							else
+							{
+
+								if (cy > nY)
+								{
+									cy--;
+								}
+							}
+							if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_WALL)
+							{
+								hitwall == true;
+							}
+							else
+							{
+								if (cx == nX && cy == nY)
+								{
+									if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_CLEAR)
+									{
+										moveable = true;
+										hitwall = true;
+									}
+								}
+							}
+						}
+						if (!moveable)
+						{
+							std::cout << "\n Enter valid position!";
+						}
+					}
+					
+				}
+				
+				moveable = false;
+				while (!moveable)
+				{
+					std::cout << "\Enter x position to shoot:";
+					std::cin >> sX;
+					std::cout << "\Enter y position to shoot:";
+					std::cin >> sY;
+					bool hitwall = false;
+					int cx = nX, cy = nY;
+					if (sX == nX && sY == nY)
+					{
+						std::cout << "\n Enter valid position!";
+					}
+					else if (sX == oX && sY == oY)
+					{
+						moveable = true;
+					}
+					else
+					{
+						while (!hitwall)
+						{
+							if (sX >= nX)
+							{
+								if (cx < sX)
+								{
+									cx++;
+								}
+							}
+							else
+							{
+
+								if (cx > sX)
+								{
+									cx--;
+								}
+							}
+							if (sY >= sY)
+							{
+								if (cy < sY)
+								{
+									cy++;
+								}
+							}
+							else
+							{
+
+								if (cy > sY)
+								{
+									cy--;
+								}
+							}
+							if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_WALL)
+							{
+								hitwall == true;
+							}
+							else
+							{
+								if (cx == sX && cy == sY)
+								{
+									if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_CLEAR)
+									{
+										moveable = true;
+										hitwall = true;
+									}
+								}
+							}
+						}
+						if (!moveable)
+						{
+							std::cout << "\n Enter valid position!";
+						}
+					}
+
+				}
+
+				moveable = false;
+				MoveClass* mMove = new MoveClass(oX, oY, nX, nY, sX, sY,BOARD_WHITE);
+				mCurrentBoard->UpdateBoard(mMove);
+
+			}
+		}
+		else
+		{
+			isSatisfied = true;
+		}
 	}
-	
-	
-	
 }
 
 int Solver::Search(Board *pBoard, int depthTo, int currDepth)
@@ -71,7 +273,7 @@ int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 	bool isMax = false;
 	
 
-	if (currDepth % 2)
+	if ((currDepth % 2) == 0)
 	{
 		isMax = true;
 		int currScope = pBoard->FindScope(BOARD_BLACK);
@@ -109,7 +311,6 @@ int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 			{
 				return temp;
 			}
-			return 0;
 		}
 		if (depthTo != 0)
 		{
@@ -123,23 +324,100 @@ int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 	MoveClass* mMove;
 	if (isMax)
 	{
-		mMove = GetBestMove(pBoard, BOARD_BLACK, depthTo, currDepth);
+		mMove = new MoveClass(GetBestMove(pBoard, BOARD_BLACK, depthTo, currDepth));
 		//GetBestMove(pBoard, BOARD_BLACK);
 		if (currDepth == 0)
 		{
 			mBestAI = new MoveClass(mMove);
+			Board* temp = new Board(pBoard);
+			temp->UpdateBoard(mMove);
+			BSearch(temp, depthTo, 1);
 		}
-		std::cout << "\n Scope is: " << mMove->Scope;
+		//std::cout << "\n Scope is: " << mMove->Scope;
 		return mMove->Scope;
+		
 	}
 	else
 	{
-		mMove = GetBestMove(pBoard, BOARD_WHITE, depthTo, currDepth);
+		mMove = new MoveClass(GetBestMove(pBoard, BOARD_WHITE, depthTo, currDepth));
 		return mMove->Scope;
-		//GetBestMove(pBoard, BOARD_WHITE);
 	}
-	return 0;
+	//return 0;
 }
+
+int Solver::BSearch(Board* pBoard, int depthTo, int currDepth)
+{
+	bool isMax = false;
+
+
+	if ((currDepth % 2) == 0)
+	{
+		isMax = true;
+		int currScope = pBoard->FindScope(BOARD_BLACK);
+		if (currScope == 0)
+		{
+			int temp = pBoard->FindScope(BOARD_WHITE);
+			if (temp == 0)
+			{
+				return -1;
+			}
+			else
+			{
+				return -temp;
+			}
+		}
+		if (depthTo != 0)
+		{
+			if (depthTo == currDepth)
+			{
+				return currScope;
+			}
+		}
+	}
+	else
+	{
+		int currScope = pBoard->FindScope(BOARD_WHITE);
+		if (currScope == 0)
+		{
+			int temp = pBoard->FindScope(BOARD_BLACK);
+			if (temp == 0)
+			{
+				return 1;
+			}
+			else
+			{
+				return temp;
+			}
+		}
+		if (depthTo != 0)
+		{
+			if (depthTo == currDepth)
+			{
+				return currScope;
+			}
+		}
+	}
+	Board* tBoard = new Board(pBoard);
+	MoveClass* mMove;
+	if (isMax)
+	{
+		mMove = new MoveClass(GetBestMove(pBoard, BOARD_BLACK, depthTo, currDepth));
+
+		return mMove->Scope;
+
+	}
+	else
+	{
+		mMove = new MoveClass(GetBestMove(pBoard, BOARD_WHITE, depthTo, currDepth));
+		if (currDepth == 1)
+		{
+			mBestPlayer = new MoveClass(mMove);
+		}
+		return mMove->Scope;
+	}
+	//return 0;
+}
+
 
 MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, int currDepth)
 {
@@ -210,7 +488,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -257,7 +535,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -317,7 +595,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -364,7 +642,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -424,7 +702,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -471,7 +749,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -531,7 +809,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -578,7 +856,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -638,7 +916,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -685,7 +963,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -746,7 +1024,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -793,7 +1071,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -854,7 +1132,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -901,7 +1179,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -962,7 +1240,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1009,7 +1287,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1090,7 +1368,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1137,7 +1415,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1197,7 +1475,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1244,7 +1522,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1304,7 +1582,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1351,7 +1629,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1411,7 +1689,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1458,7 +1736,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1518,7 +1796,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1565,7 +1843,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1626,7 +1904,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1673,7 +1951,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1734,7 +2012,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1781,7 +2059,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1842,7 +2120,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1889,7 +2167,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -1969,7 +2247,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2016,7 +2294,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2076,7 +2354,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2123,7 +2401,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2183,7 +2461,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2230,7 +2508,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2290,7 +2568,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2337,7 +2615,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2397,7 +2675,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2444,7 +2722,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2505,7 +2783,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2552,7 +2830,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2613,7 +2891,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2660,7 +2938,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2721,7 +2999,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2768,7 +3046,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2848,7 +3126,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2895,7 +3173,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -2955,7 +3233,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3002,7 +3280,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3062,7 +3340,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3109,7 +3387,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3169,7 +3447,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3216,7 +3494,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3276,7 +3554,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3323,7 +3601,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3384,7 +3662,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3431,7 +3709,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3492,7 +3770,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3539,7 +3817,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3600,7 +3878,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3647,7 +3925,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3727,7 +4005,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3774,7 +4052,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3834,7 +4112,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3881,7 +4159,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3941,7 +4219,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -3988,7 +4266,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4048,7 +4326,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4095,7 +4373,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4155,7 +4433,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4202,7 +4480,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4310,7 +4588,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4371,7 +4649,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4418,7 +4696,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4479,7 +4757,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4526,7 +4804,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4607,7 +4885,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4654,7 +4932,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4714,7 +4992,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4761,7 +5039,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4821,7 +5099,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4868,7 +5146,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4928,7 +5206,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -4975,7 +5253,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5035,7 +5313,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5082,7 +5360,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5143,7 +5421,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5190,7 +5468,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5251,7 +5529,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5298,7 +5576,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5359,7 +5637,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5406,7 +5684,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5487,7 +5765,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5534,7 +5812,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5594,7 +5872,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5641,7 +5919,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5701,7 +5979,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5748,7 +6026,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5808,7 +6086,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5855,7 +6133,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5915,7 +6193,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -5962,7 +6240,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6023,7 +6301,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6070,7 +6348,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6131,7 +6409,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6178,7 +6456,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6239,7 +6517,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6286,7 +6564,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6367,7 +6645,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6414,7 +6692,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6474,7 +6752,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6521,7 +6799,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6581,7 +6859,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6628,7 +6906,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6688,7 +6966,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6735,7 +7013,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6795,7 +7073,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6842,7 +7120,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6903,7 +7181,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -6950,7 +7228,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -7011,7 +7289,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -7058,7 +7336,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -7119,7 +7397,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -7166,7 +7444,7 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 									}
 									else
 									{
-										if (temp->Scope < mt->Scope)
+										if (temp->Scope > mt->Scope)
 										{
 											temp->mOrigX = mt->mOrigX;
 											temp->mOrigY = mt->mOrigY;
@@ -7197,7 +7475,6 @@ MoveClass* Solver::GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, 
 			}
 		}
 	}
-
 
 	return temp;
 }

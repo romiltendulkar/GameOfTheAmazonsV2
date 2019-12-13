@@ -25,6 +25,7 @@ public:
 	void Solve();
 
 	int Search(Board *pBoard,int depthTo, int currDepth);
+	int BSearch(Board* pBoard, int depthTo, int currDepth);
 	MoveClass* GetBestMove(Board *pBoard, BoardIDs currPlayer, int depthTo, int currDepth);
 
 public:

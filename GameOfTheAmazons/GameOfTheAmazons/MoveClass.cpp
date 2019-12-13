@@ -36,6 +36,8 @@ MoveClass::MoveClass(MoveClass* pMove)
 	mShootY = pMove->mShootY;
 
 	mPlayerId = pMove->mPlayerId;
+
+	Scope = pMove->Scope;
 }
 
 MoveClass::~MoveClass()
