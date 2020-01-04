@@ -14,10 +14,10 @@
 #include "Solver.h"
 Solver::Solver(FILE* pInFile, FILE* pOutFile)
 {
-	mInFile = pInFile;
-	mOutFile = pOutFile;
+	mInFile = pInFile;			//initialize to the input stream pointer
+	mOutFile = pOutFile;		//initialize to the output stream pointer
 	
-	mCurrentBoard = nullptr;
+	mCurrentBoard = nullptr;	//As no board is made yet, this is nullptr
 
 	mBestAI = nullptr;
 	mBestPlayer = nullptr;
@@ -34,15 +34,18 @@ void Solver::MakeBoard()
 {
 	int nRows, nCols;
 
+	//read the first two integers from the stream as the number of rows and columns.
 	fscanf_s(mInFile, "%i", &nRows);
 	fscanf_s(mInFile, "%i", &nCols);
 
+	//allocate memory for the board based on the number of rows and columns
 	mCurrentBoard = new Board(nRows, nCols);
 
 	for (int i = 0; i < nRows; ++i)
 	{
 		for (int j = 0; j < nCols; ++j)
 		{
+			//read each board position.
 			int temp;
 			fscanf_s(mInFile, "%i", &temp);	
 			mCurrentBoard->mBoardVec->at(i).at(j) = temp;
@@ -96,9 +99,9 @@ void Solver::Solve()
 
 				while (!moveable)
 				{
-					std::cout << "\Enter x position of piece to move:";
+					std::cout << "\nEnter x position of piece to move:";
 					std::cin >> oX;
-					std::cout << "\Enter y position of piece to move:";
+					std::cout << "\nEnter y position of piece to move:";
 					std::cin >> oY;
 					if (mCurrentBoard->mBoardVec->at(oX).at(oY) == BOARD_WHITE)
 					{
@@ -112,9 +115,9 @@ void Solver::Solve()
 				moveable = false;
 				while (!moveable)
 				{
-					std::cout << "\Enter new x position :";
+					std::cout << "\nEnter new x position :";
 					std::cin >> nX;
-					std::cout << "\Enter new y position :";
+					std::cout << "\nEnter new y position :";
 					std::cin >> nY;
 					bool hitwall = false;
 					int cx = oX, cy = oY;
@@ -158,7 +161,7 @@ void Solver::Solve()
 							}
 							if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_WALL)
 							{
-								hitwall == true;
+								hitwall = true;
 							}
 							else
 							{
@@ -183,9 +186,9 @@ void Solver::Solve()
 				moveable = false;
 				while (!moveable)
 				{
-					std::cout << "\Enter x position to shoot:";
+					std::cout << "\nEnter x position to shoot:";
 					std::cin >> sX;
-					std::cout << "\Enter y position to shoot:";
+					std::cout << "\nEnter y position to shoot:";
 					std::cin >> sY;
 					bool hitwall = false;
 					int cx = nX, cy = nY;
@@ -233,7 +236,7 @@ void Solver::Solve()
 							}
 							if (mCurrentBoard->mBoardVec->at(cx).at(cy) == BOARD_WALL)
 							{
-								hitwall == true;
+								hitwall = true;
 							}
 							else
 							{
@@ -270,7 +273,7 @@ void Solver::Solve()
 
 int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 {
-	bool isMax = false;
+	bool isMax = false;				//used to define the whether the player is the AI.
 	
 
 	if ((currDepth % 2) == 0)
@@ -279,14 +282,15 @@ int Solver::Search(Board *pBoard, int depthTo, int currDepth)
 		int currScope = pBoard->FindScope(BOARD_BLACK);
 		if (currScope == 0)
 		{
+			//if the ai has no moves available, see if the human player has any.
 			int temp = pBoard->FindScope(BOARD_WHITE);
 			if (temp == 0)
 			{
-				return -1;
+				return -1;		//this means human player played last, winning by 1 move
 			}
 			else
 			{
-				return -temp;
+				return -temp;	//The human player winning by more than 1 move.
 			}
 		}
 		if (depthTo != 0)

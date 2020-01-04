@@ -63,15 +63,19 @@ public:
 		\param pMove | The pointer to the move that is made on the board.
 	*/
 	void UpdateBoard(MoveClass* pMove);
-
+	
 	/**
-		This function is used to validate whether the move that will be made is valid.
-
-		\param pMove | The pointer to the move that will be made on the board.
+		This function will print the current board position.
 	*/
-
 	void PrintBoard();
 
+	/**	
+		Find the scope for a player on the current board.
+
+		\param player | enumerator for the player whose scope is to be found.
+
+		\return | the scope of the player is returned as an integer.
+	*/
 	int FindScope(BoardIDs player);
 
 	bool ValidMove(int oX, int oY, int nX, int nY, int sX, int sY);
